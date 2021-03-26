@@ -6,6 +6,9 @@ import java.net.URISyntaxException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import cz.vsb.zelenak.dto.WeatherDto;
+import cz.vsb.zelenak.dto.WeatherstackDto;
+
 public class WeatherstackConnector {
 	//http://api.weatherstack.com/current?access_key=d6e323b78c78ee658770738f22900675&query=New%20York
 	
@@ -15,7 +18,7 @@ public class WeatherstackConnector {
 	
 	private static String url = baseURL + urlParam + APIkey + "&query=";
 	
-	public String getWeatherForCity(Enum city) {
+	public WeatherDto getWeatherForCity(Enum city) {
 		RestTemplate template = new RestTemplate();
 		URI uri = null;
 		try {
@@ -23,7 +26,15 @@ public class WeatherstackConnector {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		ResponseEntity<String> response = template.getForEntity(uri, String.class);
-		return response.getBody();
+		ResponseEntity<WeatherstackDto> response = template.getForEntity(uri, WeatherstackDto.class);
+		WeatherDto weatherDto = new WeatherDto();
+		weatherDto.setLocation(city.toString());
+		weatherDto.setRel_humidity(response.getBody().getCurrent().getHumidity());
+		weatherDto.setTemp_celsius(response.getBody().getCurrent().getTemperature());
+		weatherDto.setTimestamp(response.getBody().getCurrent().getObservation_time());
+		weatherDto.setWeatherDesctiption(response.getBody().getCurrent().getWeather_descriptions().toString());
+		weatherDto.setWindDirection(response.getBody().getCurrent().getWind_dir());
+		weatherDto.setWindSpeed_mps(response.getBody().getCurrent().getWind_speed());
+		return weatherDto;
 	}
 }
