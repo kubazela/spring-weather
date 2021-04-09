@@ -14,7 +14,7 @@ public class WeatherstackConnector {
 	
 	private static String baseURL = "http://api.weatherstack.com/";
 	private static String urlParam = "current?access_key=";
-	private static String APIkey = "d6e323b78c78ee658770738f22900675";
+	private static String APIkey = "";
 	
 	private static String url = baseURL + urlParam + APIkey + "&query=";
 	
